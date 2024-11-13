@@ -1,5 +1,20 @@
  # 2024-11-13
 
+## Plan
+
+- [x] running mvp
+- [ ] ci/cd
+
+Next steps:
+- dark mode
+- command line options
+- optionally use the root README for the index
+- test that relative links between md files work correctly
+- test that assets (images) work
+- get test coverage up
+
+## Notes
+
 Generated the initial code via [claude.ai].
 
 This was the initial prompt:
@@ -30,3 +45,5 @@ There were a few things that needed to be cleaned and fixed up. `clippy`
 basically provided the code suggestions for everything.
 
 And now it seems to work! The live reload works too, lol.
+
+

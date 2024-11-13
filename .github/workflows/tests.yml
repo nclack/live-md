@@ -1,0 +1,49 @@
+name: Tests
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  cargo-test:
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+    - uses: actions/checkout@v4
+    - uses: dtolnay/rust-toolchain@stable
+    - run: cargo test
+      
+  nix-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install Nix
+      uses: DeterminateSystems/nix-installer-action@main
+    
+    - name: Setup Nix cache
+      uses: DeterminateSystems/magic-nix-cache-action@main
+      
+    - name: Run checks
+      run: nix flake check
+      
+    - name: Build coverage
+      run: nix build .#coverage
+      
+    - name: Add coverage PR annotations
+      run: |
+        cat result/coverage-summary.txt >> $GITHUB_STEP_SUMMARY
+      
+    - name: Upload coverage artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: |
+          result/lcov.info
+          result/codecov.json
