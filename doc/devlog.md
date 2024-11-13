@@ -25,3 +25,8 @@ No index.html
 > rendered docs.
 
 Some problem with relative paths.
+
+There were a few things that needed to be cleaned and fixed up. `clippy`
+basically provided the code suggestions for everything.
+
+And now it seems to work! The live reload works too, lol.

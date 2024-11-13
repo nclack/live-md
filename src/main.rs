@@ -148,7 +148,7 @@ fn render_all_markdown_files(content_dir: &Path, output_dir: &Path) -> Result<()
 // Recursively collect markdown files
 fn collect_markdown_files(
     current_dir: &Path,
-    base_dir: &Path,
+    _base_dir: &Path,
     files: &mut Vec<PathBuf>,
 ) -> Result<()> {
     let entries = std::fs::read_dir(current_dir)?;
@@ -160,7 +160,7 @@ fn collect_markdown_files(
         if path.is_file() && path.extension().map_or(false, |ext| ext == "md") {
             files.push(path);
         } else if path.is_dir() {
-            collect_markdown_files(&path, base_dir, files)?;
+            collect_markdown_files(&path, _base_dir, files)?;
         }
     }
     
@@ -210,6 +210,11 @@ fn generate_index_html(output_dir: &Path, markdown_files: &[PathBuf], content_di
         a:hover {
             text-decoration: underline;
         }
+        .path {
+            color: #666;
+            font-size: 0.9em;
+            margin-left: 1em;
+        }
     </style>
     <script>
         // Set up SSE for live reload
@@ -233,19 +238,30 @@ fn generate_index_html(output_dir: &Path, markdown_files: &[PathBuf], content_di
 
     // Add links to each file
     for path in sorted_files {
-        if let (Some(file_stem), Some(rel_path)) = (
-            path.file_stem().and_then(|s| s.to_str()),
-            path.strip_prefix(content_dir).ok(),
-        ) {
-            let html_path = rel_path.with_file_name(file_stem).with_extension("html");
-            let display_name = rel_path.display().to_string()
-                .trim_end_matches(".md")
-                .replace('_', " ");
+        if let Ok(rel_path) = path.strip_prefix(content_dir) {
+            let file_stem = rel_path.file_stem().and_then(|s| s.to_str()).unwrap_or_default();
+            let parent = rel_path.parent().and_then(|p| p.to_str()).unwrap_or("");
+            
+            // Create the HTML path, preserving directory structure
+            let html_path = if !parent.is_empty() {
+                format!("{}/{}.html", parent, file_stem)
+            } else {
+                format!("{}.html", file_stem)
+            };
+
+            // Create a display name, handling both file name and path
+            let display_name = file_stem.replace('_', " ");
+            let display_path = if !parent.is_empty() {
+                format!("<span class=\"path\">in {}</span>", parent)
+            } else {
+                String::new()
+            };
             
             html_content.push_str(&format!(
-                "        <li><a href=\"{}\">{}</a></li>\n",
-                html_path.display(),
-                display_name
+                "        <li><a href=\"{}\">{}{}</a></li>\n",
+                html_path,
+                display_name,
+                display_path
             ));
         }
     }

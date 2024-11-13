@@ -143,22 +143,37 @@ fn wrap_with_template(content: &str, source_path: &Path) -> String {
 
 /// Determines the output HTML path for a given markdown path
 fn get_output_path(markdown_path: &Path, output_dir: &Path) -> PathBuf {
+    // Get the file stem (file name without extension)
     let file_stem = markdown_path.file_stem().unwrap_or_default();
-    let relative_path = if markdown_path.file_name().unwrap_or_default() == "README.md" {
-        PathBuf::from("index.html")
-    } else {
-        markdown_path
-            .with_file_name(file_stem)
-            .with_extension("html")
-    };
 
-    output_dir.join(relative_path)
+    // Handle README.md as a special case
+    if markdown_path.file_name().unwrap_or_default() == "README.md" {
+        return output_dir.join("index.html");
+    }
+
+    // Get the relative directory structure
+    if let Some(Ok(content_dir)) = markdown_path
+        .parent()
+        .map(|p| p.strip_prefix(Path::new(crate::CONTENT_DIR)))
+    {
+        // Preserve directory structure
+        if !content_dir.as_os_str().is_empty() {
+            let output_path = output_dir.join(content_dir);
+            fs::create_dir_all(&output_path).unwrap_or_default();
+            output_path.join(file_stem).with_extension("html")
+        } else {
+            // File is in the root content directory
+            output_dir.join(file_stem).with_extension("html")
+        }
+    } else {
+        // Fallback: just put the file in the output directory
+        output_dir.join(file_stem).with_extension("html")
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::fs;
     use tempfile::tempdir;
 
     #[test]
