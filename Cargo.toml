@@ -1,0 +1,24 @@
+[package]
+name = "live-md"
+version = "0.1.0"
+edition = "2021"
+description = "A simple HTTP server that watches and serves markdown files as HTML"
+authors = ["Nathan Clack <nclack@gmail.com>"]
+
+[dependencies]
+axum = { version = "0.7", features = ["ws"] }
+tokio = { version = "1.0", features = ["full"] }
+tower-http = { version = "0.5", features = ["fs"] }
+tower = "0.4"
+notify = "6.1"
+notify-debouncer-mini = "0.4"
+pulldown-cmark = "0.9"
+tokio-stream = "0.1"
+futures = "0.3"
+async-stream = "0.3"
+webbrowser = "0.8"
+async-broadcast = "0.5"
+anyhow = "1.0"
+
+[dev-dependencies]
+tempfile = "3.14.0"

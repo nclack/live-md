@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>devlog</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem;
+            color: #333;
+        }
+        pre, code {
+            background-color: #f6f8fa;
+            border-radius: 3px;
+            padding: 0.2em 0.4em;
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+        }
+        pre code {
+            padding: 0;
+        }
+        pre {
+            padding: 16px;
+            overflow: auto;
+        }
+        blockquote {
+            margin: 0;
+            padding-left: 1em;
+            border-left: 4px solid #ddd;
+            color: #666;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1em 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f6f8fa;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 24px;
+            margin-bottom: 16px;
+            font-weight: 600;
+            line-height: 1.25;
+        }
+        a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <script>
+        // Set up SSE for live reload
+        const events = new EventSource('/events');
+        events.onmessage = (e) => {
+            if (e.data === 'reload') {
+                window.location.reload();
+            }
+        };
+    </script>
+</head>
+<body>
+    <h1>2024-11-13</h1>
+<p>Generated the initial code via [claude.ai].</p>
+<p>This was the initial prompt:</p>
+<blockquote>
+<p>[!note] Initial Prompt
+I’d like to create a simple http server that watches markdown files found
+in a directory tree, renders them to html, and serves those html files. If any
+markdown file changes, the html for that file should be regenerated and the
+browser page refreshed. The server should serve to localhost on a specified
+port, and when the server starts it should open an index page in a browser.</p>
+<p>I want to write it rust. Which libraries should I use?</p>
+<p>Don’t write code till I ask.</p>
+</blockquote>
+<p>No index.html</p>
+<blockquote>
+<p>[!note] Initial Prompt
+the server appears to start, but I get a 404. I set the CONTENT_DIR to “doc”
+and I have a file “doc/devlog.md” that looks like it’s transformed to “dist/
+doc/devlog.html” as expected. I’m not sure how the server knows what file to
+serve. It may need an index.html. Let’s generate a default one that links to the
+rendered docs.</p>
+</blockquote>
+<p>Some problem with relative paths.</p>
+
+</body>
+</html>
