@@ -3,7 +3,8 @@
 ## Plan
 
 - [x] running mvp
-- [ ] ci/cd
+- [x] ci/cd
+- [ ] get test coverage up
 
 Next steps:
 - dark mode
@@ -11,7 +12,6 @@ Next steps:
 - optionally use the root README for the index
 - test that relative links between md files work correctly
 - test that assets (images) work
-- get test coverage up
 
 ## Notes
 
@@ -46,4 +46,5 @@ basically provided the code suggestions for everything.
 
 And now it seems to work! The live reload works too, lol.
 
-
+Added CI from another rust project by copying over the `.github` and nix files.
+No modifications needed.

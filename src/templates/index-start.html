@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Documentation</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            color: #333;
+        }
+        h1 {
+            border-bottom: 2px solid #eaecef;
+            padding-bottom: 0.3em;
+        }
+        .file-list {
+            list-style: none;
+            padding: 0;
+        }
+        .file-list li {
+            margin: 0.5em 0;
+            padding: 0.5em;
+            background: #f6f8fa;
+            border-radius: 3px;
+        }
+        .file-list li:hover {
+            background: #eaecef;
+        }
+        a {
+            color: #0366d6;
+            text-decoration: none;
+            display: block;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .path {
+            color: #666;
+            font-size: 0.9em;
+            margin-left: 1em;
+        }
+    </style>
+    <script>
+        // Set up SSE for live reload
+        const events = new EventSource('/events');
+        events.onmessage = (e) => {
+            if (e.data === 'reload') {
+                window.location.reload();
+            }
+        };
+    </script>
+</head>
+<body>
+    <h1>Documentation Index</h1>
+    <ul class="file-list">
