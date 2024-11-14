@@ -1,6 +1,10 @@
 use anyhow::{Context, Result};
 use notify::{Config, Event, EventKind, RecommendedWatcher, RecursiveMode, Watcher};
-use std::{path::{PathBuf, Path}, sync::Arc, time::Duration};
+use std::{
+    path::{Path, PathBuf},
+    sync::Arc,
+    time::Duration,
+};
 use tokio::sync::broadcast;
 
 use crate::markdown::render_markdown_file;
@@ -81,11 +85,13 @@ fn handle_fs_event(
 /// Determines if a file system event is relevant for processing
 fn is_relevant_event(event: &Event) -> bool {
     use notify::event::{CreateKind, ModifyKind, RemoveKind};
-    matches!(event.kind,
-        EventKind::Create(CreateKind::File) 
-        | EventKind::Modify(ModifyKind::Data(_)) 
-        | EventKind::Modify(ModifyKind::Name(_)) 
-        | EventKind::Remove(RemoveKind::File))
+    matches!(
+        event.kind,
+        EventKind::Create(CreateKind::File)
+            | EventKind::Modify(ModifyKind::Data(_))
+            | EventKind::Modify(ModifyKind::Name(_))
+            | EventKind::Remove(RemoveKind::File)
+    )
 }
 
 #[cfg(test)]

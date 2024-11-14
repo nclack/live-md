@@ -35,7 +35,7 @@ fn create_markdown_file(path: &PathBuf, content: &str) -> Result<()> {
 async fn test_server_starts_and_serves_content() -> Result<()> {
     let temp_dir = TempDir::new()?;
     let config = create_test_config(&temp_dir);
-    
+
     // Create content and output directories
     fs::create_dir_all(&config.content_dir)?;
     fs::create_dir_all(&config.output_dir)?;
@@ -46,19 +46,15 @@ async fn test_server_starts_and_serves_content() -> Result<()> {
 
     // Start server in background task
     let server_config = config.clone();
-    let server_handle = tokio::spawn(async move {
-        live_md::server::start_server(server_config).await
-    });
+    let server_handle =
+        tokio::spawn(async move { live_md::server::start_server(server_config).await });
 
     // Give server time to start
     sleep(Duration::from_millis(100)).await;
 
     // Make HTTP request to server
     let client = Client::new();
-    let response = client
-        .get(config.server_url())
-        .send()
-        .await?;
+    let response = client.get(config.server_url()).send().await?;
 
     assert!(response.status().is_success());
     let body = response.text().await?;
@@ -74,7 +70,7 @@ async fn test_server_starts_and_serves_content() -> Result<()> {
 async fn test_file_watching_and_live_reload() -> Result<()> {
     let temp_dir = TempDir::new()?;
     let config = create_test_config(&temp_dir);
-    
+
     // Create directories
     fs::create_dir_all(&config.content_dir)?;
     fs::create_dir_all(&config.output_dir)?;
@@ -85,9 +81,8 @@ async fn test_file_watching_and_live_reload() -> Result<()> {
 
     // Start server
     let server_config = config.clone();
-    let server_handle = tokio::spawn(async move {
-        live_md::server::start_server(server_config).await
-    });
+    let server_handle =
+        tokio::spawn(async move { live_md::server::start_server(server_config).await });
 
     // Wait for server to start
     sleep(Duration::from_millis(100)).await;
@@ -126,31 +121,21 @@ async fn test_file_watching_and_live_reload() -> Result<()> {
 async fn test_nested_directory_structure() -> Result<()> {
     let temp_dir = TempDir::new()?;
     let config = create_test_config(&temp_dir);
-    
+
     // Create nested directory structure
     let nested_dir = config.content_dir.join("docs").join("section");
     fs::create_dir_all(&nested_dir)?;
     fs::create_dir_all(&config.output_dir)?;
 
     // Create markdown files in different locations
-    create_markdown_file(
-        &config.content_dir.join("root.md"),
-        "# Root Document",
-    )?;
-    create_markdown_file(
-        &nested_dir.join("nested.md"),
-        "# Nested Document",
-    )?;
-    create_markdown_file(
-        &config.content_dir.join("README.md"),
-        "# Project Index",
-    )?;
+    create_markdown_file(&config.content_dir.join("root.md"), "# Root Document")?;
+    create_markdown_file(&nested_dir.join("nested.md"), "# Nested Document")?;
+    create_markdown_file(&config.content_dir.join("README.md"), "# Project Index")?;
 
     // Start server
     let server_config = config.clone();
-    let server_handle = tokio::spawn(async move {
-        live_md::server::start_server(server_config).await
-    });
+    let server_handle =
+        tokio::spawn(async move { live_md::server::start_server(server_config).await });
 
     // Wait for server to start
     sleep(Duration::from_millis(100)).await;
@@ -190,7 +175,7 @@ async fn test_nested_directory_structure() -> Result<()> {
 async fn test_markdown_features() -> Result<()> {
     let temp_dir = TempDir::new()?;
     let config = create_test_config(&temp_dir);
-    
+
     fs::create_dir_all(&config.content_dir)?;
     fs::create_dir_all(&config.output_dir)?;
 
@@ -225,9 +210,8 @@ fn main() {
 
     // Start server
     let server_config = config.clone();
-    let server_handle = tokio::spawn(async move {
-        live_md::server::start_server(server_config).await
-    });
+    let server_handle =
+        tokio::spawn(async move { live_md::server::start_server(server_config).await });
 
     // Wait for server to start
     sleep(Duration::from_millis(100)).await;
@@ -241,7 +225,7 @@ fn main() {
 
     assert!(response.status().is_success());
     let body = response.text().await?;
-    
+
     // Check for rendered features
     assert!(body.contains("<table>")); // Tables
     assert!(body.contains("type=\"checkbox\"")); // Task list
@@ -249,7 +233,7 @@ fn main() {
     assert!(body.contains("<em>italic</em>")); // Italic
     assert!(body.contains("<del>strikethrough</del>")); // Strikethrough
     assert!(body.contains("class=\"footnote-definition\"")); // Footnotes
-    assert!(body.contains("<code>")) ; // Code blocks
+    assert!(body.contains("<code>")); // Code blocks
 
     // Cleanup
     server_handle.abort();
@@ -260,20 +244,22 @@ fn main() {
 async fn test_index_generation() -> Result<()> {
     let temp_dir = TempDir::new()?;
     let config = create_test_config(&temp_dir);
-    
+
     fs::create_dir_all(&config.content_dir)?;
     fs::create_dir_all(&config.output_dir)?;
 
     // Create multiple markdown files
     create_markdown_file(&config.content_dir.join("page1.md"), "# Page 1")?;
     create_markdown_file(&config.content_dir.join("page2.md"), "# Page 2")?;
-    create_markdown_file(&config.content_dir.join("docs").join("page3.md"), "# Page 3")?;
+    create_markdown_file(
+        &config.content_dir.join("docs").join("page3.md"),
+        "# Page 3",
+    )?;
 
     // Start server
     let server_config = config.clone();
-    let server_handle = tokio::spawn(async move {
-        live_md::server::start_server(server_config).await
-    });
+    let server_handle =
+        tokio::spawn(async move { live_md::server::start_server(server_config).await });
 
     // Wait for server to start
     sleep(Duration::from_millis(100)).await;
@@ -287,7 +273,7 @@ async fn test_index_generation() -> Result<()> {
 
     assert!(response.status().is_success());
     let body = response.text().await?;
-    
+
     // Verify index content
     assert!(body.contains("Page 1"));
     assert!(body.contains("Page 2"));

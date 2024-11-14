@@ -84,9 +84,9 @@ async fn sse_handler(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use futures_util::{FutureExt, StreamExt};
     use std::net::Ipv4Addr;
     use std::time::Duration;
-    use futures_util::{FutureExt, StreamExt};
     use tempfile::TempDir;
     use tokio::time::sleep;
 
