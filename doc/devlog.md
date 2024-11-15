@@ -3,6 +3,8 @@
 ## Plan
 
 - [ ] get test coverage up
+- [ ] build dependencies for ci
+- [ ] test timeouts
 
 ## Notes
 

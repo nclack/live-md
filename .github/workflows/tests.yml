@@ -13,6 +13,7 @@ jobs:
       matrix:
         os: [macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 5
     
     steps:
     - uses: actions/checkout@v4
@@ -21,6 +22,7 @@ jobs:
       
   nix-test:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
     - uses: actions/checkout@v4
     
