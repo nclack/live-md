@@ -130,7 +130,7 @@ mod tests {
             }
         };
 
-        assert_eq!(received_path, test_file);
+        assert_eq!(received_path.canonicalize()?, test_file.canonicalize()?);
 
         // Check if HTML was generated
         let html_file = output_dir.join("test.html");
@@ -152,7 +152,7 @@ mod tests {
         let tx = Arc::new(tx);
 
         // Setup watcher
-        setup_file_watcher(content_dir.clone(), output_dir.clone(), tx)?;
+        setup_file_watcher(content_dir.clone(), output_dir.clone(), tx.clone())?;
 
         // Create initial file
         let test_file = content_dir.join("test.md");
@@ -161,6 +161,8 @@ mod tests {
         // Wait for initial file creation to be processed
         let _ = rx.recv().await;
 
+        // Add delay to ensure initial rendering completes
+        sleep(Duration::from_millis(100)).await;
         // Modify the file
         fs::write(&test_file, "# Modified content")?;
 
@@ -174,8 +176,10 @@ mod tests {
             }
         };
 
-        assert_eq!(received_path, test_file);
+        assert_eq!(received_path.canonicalize()?, test_file.canonicalize()?);
 
+        // Add delay to ensure modification rendering completes
+        sleep(Duration::from_millis(100)).await;
         // Verify HTML content was updated
         let html_content = fs::read_to_string(output_dir.join("test.html"))?;
         assert!(html_content.contains("Modified content"));

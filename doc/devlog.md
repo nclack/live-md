@@ -1,4 +1,21 @@
- # 2024-11-13
+# 2024-11-15
+
+## Plan
+
+- [ ] get test coverage up
+
+## Notes
+
+When making the index page, I decided to take the file name and 
+reformat that to create the listing in the generated `index.html`.
+
+There are other possibilities here:
+- Use the title heading from within the linked markdown file.
+- Don't generate the index.html at all. Use a `README.md` or `toc`
+  file if one exists.
+  
+
+# 2024-11-13
 
 ## Plan
 

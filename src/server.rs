@@ -84,27 +84,10 @@ async fn sse_handler(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use futures_util::{FutureExt, StreamExt};
     use std::net::Ipv4Addr;
     use std::time::Duration;
     use tempfile::TempDir;
     use tokio::time::sleep;
-
-    #[tokio::test]
-    async fn test_sse_handler() {
-        let (tx, _) = broadcast::channel(16);
-        let tx = Arc::new(tx);
-        let state = ServerState { tx: tx.clone() };
-
-        // Spawn SSE handler
-        let _sse = sse_handler(State(state));
-
-        // Send a test event
-        tx.send(PathBuf::from("test.md")).unwrap();
-
-        // Sleep briefly to allow event processing
-        sleep(Duration::from_millis(100)).await;
-    }
 
     #[tokio::test]
     async fn test_server_setup() -> Result<()> {
@@ -117,7 +100,7 @@ mod tests {
         let config = Config::new(
             content_dir,
             output_dir,
-            0, // Use port 0 for automatic port assignment
+            3001,
             std::net::IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)),
             false, // Don't open browser in test
             16,

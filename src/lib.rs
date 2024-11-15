@@ -6,6 +6,39 @@ pub mod watcher;
 use anyhow::Result;
 use std::path::PathBuf;
 
+/// Formats a filename into a readable display name:
+/// - Adds spaces before numbers
+/// - Adds spaces between lowercase and uppercase letters (camelCase)
+/// - Converts to sentence case
+/// - Replaces underscores with spaces
+fn format_display_name(name: &str) -> String {
+    let with_spaces = name.replace('_', " ");
+    let mut spaced = String::with_capacity(with_spaces.len() * 2);
+    let mut chars = with_spaces.chars().peekable();
+
+    while let Some(current) = chars.next() {
+        spaced.push(current);
+        if let Some(next) = chars.peek() {
+            // Add space before numbers or after numbers
+            if (current.is_alphabetic() && next.is_numeric())
+                || (current.is_numeric() && next.is_alphabetic())
+            {
+                spaced.push(' ');
+            }
+            // Add space between lowercase->uppercase (camelCase)
+            else if current.is_lowercase() && next.is_uppercase() {
+                spaced.push(' ');
+            }
+        }
+    }
+
+    let mut chars = spaced.chars();
+    match chars.next() {
+        Some(first) => first.to_uppercase().collect::<String>() + &chars.as_str().to_lowercase(),
+        None => String::new(),
+    }
+}
+
 /// Renders all markdown files in the content directory to HTML files in the output directory
 pub fn render_all_markdown_files(
     content_dir: &std::path::Path,
@@ -75,8 +108,8 @@ pub fn generate_index_html(
                 format!("{}.html", file_stem)
             };
 
-            // Create a display name, handling both file name and path
-            let display_name = file_stem.replace('_', " ");
+            // Create a display name with proper formatting
+            let display_name = format_display_name(file_stem);
             let display_path = if !parent.is_empty() {
                 format!("<span class=\"path\">in {}</span>", parent)
             } else {
@@ -117,6 +150,15 @@ mod tests {
     use tempfile::TempDir;
 
     #[test]
+    fn test_format_display_name() {
+        assert_eq!(format_display_name("page1"), "Page 1");
+        assert_eq!(format_display_name("hello_world"), "Hello world");
+        assert_eq!(format_display_name("test_page2"), "Test page 2");
+        assert_eq!(format_display_name("PAGE1"), "Page 1");
+        assert_eq!(format_display_name("myPage123test"), "My page 123 test");
+    }
+
+    #[test]
     fn test_collect_markdown_files() -> Result<()> {
         let temp_dir = TempDir::new()?;
         let base_path = temp_dir.path();
@@ -147,8 +189,8 @@ mod tests {
         generate_index_html(output_dir, &files, content_dir)?;
 
         let index_content = fs::read_to_string(output_dir.join("index.html"))?;
-        assert!(index_content.contains("test1"));
-        assert!(index_content.contains("test2"));
+        assert!(index_content.contains("Test 1"));
+        assert!(index_content.contains("Test 2"));
 
         Ok(())
     }

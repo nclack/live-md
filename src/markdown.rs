@@ -8,31 +8,30 @@ use std::{
 /// Configuration for markdown parsing
 #[derive(Debug, Clone, Default)]
 pub struct MarkdownOptions {
-    pub enable_tables: bool,
-    pub enable_footnotes: bool,
-    pub enable_strikethrough: bool,
-    pub enable_tasklists: bool,
-    pub enable_smart_punctuation: bool,
+    pub disable_tables: bool,
+    pub disable_footnotes: bool,
+    pub disable_strikethrough: bool,
+    pub disable_tasklists: bool,
+    pub disable_smart_punctuation: bool,
 }
 
 impl MarkdownOptions {
-    /// Convert to pulldown_cmark Options
     fn to_parser_options(&self) -> Options {
-        let mut options = Options::empty();
-        if self.enable_tables {
-            options.insert(Options::ENABLE_TABLES);
+        let mut options = Options::all();
+        if self.disable_tables {
+            options.remove(Options::ENABLE_TABLES);
         }
-        if self.enable_footnotes {
-            options.insert(Options::ENABLE_FOOTNOTES);
+        if self.disable_footnotes {
+            options.remove(Options::ENABLE_FOOTNOTES);
         }
-        if self.enable_strikethrough {
-            options.insert(Options::ENABLE_STRIKETHROUGH);
+        if self.disable_strikethrough {
+            options.remove(Options::ENABLE_STRIKETHROUGH);
         }
-        if self.enable_tasklists {
-            options.insert(Options::ENABLE_TASKLISTS);
+        if self.disable_tasklists {
+            options.remove(Options::ENABLE_TASKLISTS);
         }
-        if self.enable_smart_punctuation {
-            options.insert(Options::ENABLE_SMART_PUNCTUATION);
+        if self.disable_smart_punctuation {
+            options.remove(Options::ENABLE_SMART_PUNCTUATION);
         }
         options
     }
@@ -50,7 +49,7 @@ pub fn render_markdown_file(markdown_path: &Path, output_dir: &Path) -> Result<P
     // Generate full HTML document
     let final_html = wrap_html_template(&html_content, markdown_path)?;
 
-    // Determine output path
+    // Determine output path"
     let output_path = get_output_path(markdown_path, output_dir)?;
 
     // Ensure parent directory exists
@@ -96,31 +95,28 @@ fn get_output_path(markdown_path: &Path, output_dir: &Path) -> Result<PathBuf> {
         return Ok(output_dir.join("index.html"));
     }
 
-    // Try to get relative path from the root content directory (if any)
-    if let Some(content_dir) = markdown_path.parent() {
-        // Attempt to find the common prefix (i.e., the content directory)
-        if let Ok(rel_path) = content_dir
-            .strip_prefix(std::env::current_dir()?)
-            .or_else(|_| content_dir.strip_prefix("doc"))
-        {
-            // If we have a relative path, preserve the directory structure
-            if !rel_path.as_os_str().is_empty() {
-                let output_path = output_dir.join(rel_path);
-                fs::create_dir_all(&output_path).with_context(|| {
-                    format!("Failed to create directory: {}", output_path.display())
-                })?;
-                Ok(output_path.join(file_stem).with_extension("html"))
-            } else {
-                // File is in the root directory
-                Ok(output_dir.join(file_stem).with_extension("html"))
+    // Get the parent directory of the markdown file
+    if let Some(parent) = markdown_path.parent() {
+        // Try to find common root directory by walking up the parent directories
+        let mut current = parent;
+        while let Some(parent_dir) = current.parent() {
+            if parent_dir
+                .file_name()
+                .map_or(false, |name| name == "content" || name == "doc")
+            {
+                // Found the content root, now we can get the relative path
+                if let Ok(rel_path) = parent.strip_prefix(parent_dir) {
+                    let output_path = output_dir.join(rel_path);
+                    fs::create_dir_all(&output_path)?;
+                    return Ok(output_path.join(file_stem).with_extension("html"));
+                }
             }
-        } else {
-            // If we can't determine the relative path, just put it in the root of output_dir
-            Ok(output_dir.join(file_stem).with_extension("html"))
+            current = parent_dir;
         }
-    } else {
-        Ok(output_dir.join(file_stem).with_extension("html"))
     }
+
+    // If no content root found or other issues, place in output root
+    Ok(output_dir.join(file_stem).with_extension("html"))
 }
 
 #[cfg(test)]
@@ -139,11 +135,7 @@ mod tests {
 
     #[test]
     fn test_markdown_options() {
-        let options = MarkdownOptions {
-            enable_tables: true,
-            ..Default::default()
-        };
-
+        let options = MarkdownOptions::default();
         let markdown = "| Header |\n|--------|\n| Cell   |";
         let html = markdown_to_html(markdown, &options);
         assert!(html.contains("<table>"));
@@ -228,13 +220,7 @@ mod tests {
 
     #[test]
     fn test_markdown_special_features() {
-        let mut options = MarkdownOptions {
-            enable_tables: true,
-            enable_footnotes: true,
-            enable_strikethrough: true,
-            enable_tasklists: true,
-            enable_smart_punctuation: true,
-        };
+        let mut options = MarkdownOptions::default();
 
         // Test tables
         let table = "| Header |\n|--------|\n| Cell   |";
@@ -255,7 +241,16 @@ mod tests {
         assert!(html.contains("checked"));
 
         // Test with features disabled
-        options.enable_tables = false;
+        options.disable_tables = true;
         assert!(!markdown_to_html(table, &options).contains("<table>"));
+    }
+
+    #[test]
+    fn test_code_block_rendering() {
+        let options = MarkdownOptions::default();
+        let markdown = "\n```rust\nfn main() {}\n```";
+        let html = dbg!(markdown_to_html(markdown, &options));
+        assert!(html.contains("<pre><code"));
+        assert!(html.contains("class=\"language-rust\""));
     }
 }
