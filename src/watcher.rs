@@ -162,7 +162,7 @@ mod tests {
         let _ = rx.recv().await;
 
         // Add delay to ensure initial rendering completes
-        sleep(Duration::from_millis(100)).await;
+        sleep(Duration::from_millis(500)).await;
         // Modify the file
         fs::write(&test_file, "# Modified content")?;
 
@@ -179,7 +179,7 @@ mod tests {
         assert_eq!(received_path.canonicalize()?, test_file.canonicalize()?);
 
         // Add delay to ensure modification rendering completes
-        sleep(Duration::from_millis(100)).await;
+        sleep(Duration::from_millis(500)).await;
         // Verify HTML content was updated
         let html_content = fs::read_to_string(output_dir.join("test.html"))?;
         assert!(html_content.contains("Modified content"));
