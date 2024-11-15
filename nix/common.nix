@@ -24,6 +24,7 @@
       # Add llvm tools to all builds
       llvmPackages.bintools
       pkg-config
+      openssl
     ];
   };
 
