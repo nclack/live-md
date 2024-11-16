@@ -1,9 +1,29 @@
- # 2024-11-13
+# 2024-11-15
+
+## Plan
+
+- [ ] get test coverage up
+- [ ] build dependencies for ci
+- [ ] test timeouts
+
+## Notes
+
+When making the index page, I decided to take the file name and 
+reformat that to create the listing in the generated `index.html`.
+
+There are other possibilities here:
+- Use the title heading from within the linked markdown file.
+- Don't generate the index.html at all. Use a `README.md` or `toc`
+  file if one exists.
+  
+
+# 2024-11-13
 
 ## Plan
 
 - [x] running mvp
-- [ ] ci/cd
+- [x] ci/cd
+- [ ] get test coverage up
 
 Next steps:
 - dark mode
@@ -11,7 +31,6 @@ Next steps:
 - optionally use the root README for the index
 - test that relative links between md files work correctly
 - test that assets (images) work
-- get test coverage up
 
 ## Notes
 
@@ -46,4 +65,5 @@ basically provided the code suggestions for everything.
 
 And now it seems to work! The live reload works too, lol.
 
-
+Added CI from another rust project by copying over the `.github` and nix files.
+No modifications needed.
