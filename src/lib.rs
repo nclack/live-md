@@ -22,6 +22,7 @@ fn format_display_name(name: &str) -> String {
             // Add space before numbers or after numbers
             if (current.is_alphabetic() && next.is_numeric())
                 || (current.is_numeric() && next.is_alphabetic())
+                || (current.is_lowercase() && next.is_uppercase())
             {
                 spaced.push(' ');
             }
