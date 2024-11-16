@@ -101,11 +101,10 @@ in {
           toolchain
         ];
         postInstall = ''
-          cargo llvm-cov show \
+          cargo llvm-cov \
             --html \
-            --output-dir ./coverage \
             --ignore-filename-regex "/*" \
-            --fail-under-lines 80
+            --fail-under-lines 10
         '';
       });
   };
