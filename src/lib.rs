@@ -25,10 +25,6 @@ fn format_display_name(name: &str) -> String {
             {
                 spaced.push(' ');
             }
-            // Add space between lowercase->uppercase (camelCase)
-            else if current.is_lowercase() && next.is_uppercase() {
-                spaced.push(' ');
-            }
         }
     }
 
