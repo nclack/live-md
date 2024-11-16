@@ -138,7 +138,7 @@ mod tests {
 
         Ok(())
     }
-    
+
     // FIXME: having trouble with this one on windows
     // #[tokio::test]
     // async fn test_watcher_file_modification() -> result<()> {
