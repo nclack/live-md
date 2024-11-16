@@ -96,6 +96,10 @@ in {
     test = craneLibWithTools.cargoTest (commonArgs
       // {
         inherit cargoArtifacts;
+        nativeBuildInputs = commonArgs.nativeBuildInputs ++ [
+          pkgs.cargo-llvm-cov
+          toolchain
+        ];
         postInstall = ''
           cargo llvm-cov show \
             --html \
