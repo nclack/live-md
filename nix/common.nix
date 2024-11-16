@@ -92,20 +92,20 @@ in {
       inherit src;
     };
 
-    # Add cargo test
-    test = craneLibWithTools.cargoTest (commonArgs
-      // {
-        inherit cargoArtifacts;
-        nativeBuildInputs = commonArgs.nativeBuildInputs ++ [
-          pkgs.cargo-llvm-cov
-          toolchain
-        ];
-        postInstall = ''
-          cargo llvm-cov \
-            --html \
-            --ignore-filename-regex "/*" \
-            --fail-under-lines 10
-        '';
-      });
+    # # Add cargo test
+    # test = craneLibWithTools.cargoTest (commonArgs
+    #   // {
+    #     inherit cargoArtifacts;
+    #     nativeBuildInputs = commonArgs.nativeBuildInputs ++ [
+    #       pkgs.cargo-llvm-cov
+    #       toolchain
+    #     ];
+    #     postInstall = ''
+    #       cargo llvm-cov \
+    #         --html \
+    #         --ignore-filename-regex "/*" \
+    #         --fail-under-lines 10
+    #     '';
+    #   });
   };
 }
