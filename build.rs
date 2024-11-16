@@ -85,11 +85,11 @@ fn main() {
     }
 
     // Print any custom environment variables that might be relevant
-    for (key, value) in env::vars() {
-        if key.starts_with("NIX_") || key.starts_with("CARGO_") {
-            println!("cargo:warning={}={}", key, value);
-        }
-    }
+    // for (key, value) in env::vars() {
+    //     if key.starts_with("NIX_") || key.starts_with("CARGO_") {
+    //         println!("cargo:warning={}={}", key, value);
+    //     }
+    // }
 
     println!("cargo:rerun-if-changed=src/templates");
 }
