@@ -97,9 +97,9 @@ fn is_relevant_event(event: &Event) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::fs;
-    use tempfile::TempDir;
-    use tokio::time::sleep;
+    // use std::fs;
+    // use tempfile::TempDir;
+    // use tokio::time::sleep;
 
     // FIXME: having trouble with this one on windows
     // #[tokio::test]
