@@ -13,10 +13,7 @@
   craneLibWithTools = craneLib.overrideToolchain toolchain;
 
   # Common arguments that will be used for both the package and checks
-  src = lib.cleanSourceWith {
-    src = ../.;
-    filter = path: type: (craneLib.filterCargoSources path type);
-  };
+  src = lib.cleanSource ../.;
 
   commonArgs = {
     inherit src;
