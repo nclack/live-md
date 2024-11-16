@@ -154,17 +154,20 @@ mod tests {
         // Setup watcher
         setup_file_watcher(content_dir.clone(), output_dir.clone(), tx.clone())?;
 
-        // Create initial file
+        // Create initial file and ensure it's synced to disk
         let test_file = content_dir.join("test.md");
         fs::write(&test_file, "# Initial content")?;
+        std::fs::File::open(&test_file)?.sync_all()?;
 
         // Wait for initial file creation to be processed
         let _ = rx.recv().await;
 
         // Add delay to ensure initial rendering completes
-        sleep(Duration::from_millis(500)).await;
-        // Modify the file
+        sleep(Duration::from_millis(100)).await;
+
+        // Modify the file and ensure it's synced to disk
         fs::write(&test_file, "# Modified content")?;
+        std::fs::File::open(&test_file)?.sync_all()?;
 
         // Wait for the modification event
         let received_path = tokio::select! {
@@ -179,7 +182,7 @@ mod tests {
         assert_eq!(received_path.canonicalize()?, test_file.canonicalize()?);
 
         // Add delay to ensure modification rendering completes
-        sleep(Duration::from_millis(500)).await;
+        sleep(Duration::from_millis(100)).await;
         // Verify HTML content was updated
         let html_content = fs::read_to_string(output_dir.join("test.html"))?;
         assert!(html_content.contains("Modified content"));
