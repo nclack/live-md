@@ -58,6 +58,7 @@ in
       xclip
       xsel
       caddy # live server for watching coverage
+      cachix
 
       # Shell utilities
       eza
