@@ -40,10 +40,12 @@ jobs:
       run: |
         cat result/coverage-summary.txt >> $GITHUB_STEP_SUMMARY
       
-    - name: Upload coverage artifact
-      uses: actions/upload-artifact@v4
+    - name: Upload to Codecov
+      uses: codecov/codecov-action@v5
       with:
-        name: coverage-report
-        path: |
-          result/lcov.info
-          result/codecov.json
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: result/codecov.json
+        fail_ci_if_error: true
+        flags: unittests
+        name: codecov-pr
+        verbose: true
