@@ -1,9 +1,9 @@
 {
   inputs = {
-    # nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     # cargo-llvm-cov: fix build, 0.6.12 -> 0.6.14
-    nixpkgs.url = "https://github.com/NixOS/nixpkgs/archive/pull/353741/head.tar.gz";
+    # nixpkgs.url = "https://github.com/NixOS/nixpkgs/archive/pull/353741/head.tar.gz";
     rust-overlay.url = "github:oxalica/rust-overlay";
     crane.url = "github:ipetkov/crane";
     utils.url = "github:numtide/flake-utils";

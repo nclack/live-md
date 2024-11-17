@@ -1,10 +1,40 @@
+# 2024-11-16
+
+## Plan
+
+- [ ] update the flake to use nixpkgs master
+- [ ] get ci more reliable
+  - [x] increase test timeout
+- [ ] optimize builds
+- [/] optionally use the root README for the index
+
+### Next
+
+- [ ] dark mode
+- [ ] command line options
+- [ ] test that relative links between md files work correctly
+- [ ] test that assets (images) work
+
+## Notes
+
+It does look like there's something racy. Every once in a while the page
+renders blank and I need to trigger a re-render of the html then force a 
+refresh. Happens more often then not.
+
+### Using the README
+
+I started down this road a bit. The idea is to use the README for the main
+content but build a collapsible index from the contents of the doc folder.
+
+I have a chat on claude with an initial design.
+
 # 2024-11-15
 
 ## Plan
 
-- [ ] get test coverage up
-- [ ] build dependencies for ci
-- [ ] test timeouts
+- [x] get test coverage up
+- [x] build dependencies for ci
+- [x] test timeouts
 
 ## Notes
 
@@ -15,7 +45,10 @@ There are other possibilities here:
 - Use the title heading from within the linked markdown file.
 - Don't generate the index.html at all. Use a `README.md` or `toc`
   file if one exists.
-  
+
+Spent a long time screwing around with different tests etc.
+
+Something wrong with watch tests on windows. Basically had to disable those.
 
 # 2024-11-13
 
