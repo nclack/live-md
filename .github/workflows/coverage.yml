@@ -23,12 +23,12 @@ jobs:
       run: nix build .#coverage
         
     - name: Upload to Codecov
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: result/codecov.json
         fail_ci_if_error: true
-      
+        
     - name: Upload HTML report
       uses: actions/upload-pages-artifact@v2
       with:
