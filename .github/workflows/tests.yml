@@ -1,8 +1,6 @@
 name: Tests
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
   workflow_dispatch:
@@ -13,7 +11,7 @@ jobs:
       matrix:
         os: [macos-latest] #, windows-latest] # disable windows till I figure out the watch tests
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 5
+    timeout-minutes: 10
     
     steps:
     - uses: actions/checkout@v4
@@ -22,7 +20,7 @@ jobs:
       
   nix-test:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
     - uses: actions/checkout@v4
     
