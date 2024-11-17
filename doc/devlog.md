@@ -1,11 +1,11 @@
-# 2024-11-16
+# 2024-11-17
 
 ## Plan
 
-- [ ] update the flake to use nixpkgs master
-- [ ] get ci more reliable
-  - [x] increase test timeout
+- [x] update the flake to use nixpkgs master
+- [x] codecov upload for prs
 - [ ] optimize builds
+- [ ] Generate a README.md with badges etc. 
 - [/] optionally use the root README for the index
 
 ### Next
@@ -14,6 +14,31 @@
 - [ ] command line options
 - [ ] test that relative links between md files work correctly
 - [ ] test that assets (images) work
+
+## Notes
+
+### Build optimization
+
+Looking into [cachix] and [sscache].
+
+I'm already using [magix-nix-cache] I think the idea with [cachix] is that 
+maybe it will take some of the load off. It's complicated though, and I think
+it's only caching the stuff I build. I don't depend on that stuff so seems 
+likely to be useles. However there is the [nix-community] cache that I might
+be able to use (the [Nix Quick Install Action] looks cool too).
+
+
+[cachix]: https://app.cachix.org/
+[sscache]: https://github.com/mozilla/sccache
+[magic-nix-cache]: https://github.com/DeterminateSystems/magic-nix-cache-action
+[nix-community]: https://app.cachix.org/cache/nix-community
+[Nix Quick Install Action]: https://github.com/nixbuild/nix-quick-install-action 
+# 2024-11-16
+
+## Plan
+
+- [x] get ci more reliable
+- [x] increase test timeout
 
 ## Notes
 
